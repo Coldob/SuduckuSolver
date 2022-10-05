@@ -155,7 +155,7 @@ while game:
         possibilities[x] = eliminatingNumbers(letter, num)
     game = reCheck()
 if len(possibilities)==0:
-    print("Big Brain Play")
+    #print("Big Brain Play")
     board = f"""
     {exists['a1']}|{exists['a2']}|{exists['a3']}|  |{exists['a4']}|{exists['a5']}|{exists['a6']}|  |{exists['a7']}|{exists['a8']}|{exists['a9']}\n
     {exists['b1']}|{exists['b2']}|{exists['b3']}|  |{exists['b4']}|{exists['b5']}|{exists['b6']}|  |{exists['b7']}|{exists['b8']}|{exists['b9']}\n
@@ -171,36 +171,8 @@ if len(possibilities)==0:
     print(board)
 
 else:
-    #brute force possible one or going from least to top i guess
-    #oof will eventually make something for this
-    saveState = exists
-    pSaveState = possibilities
-    #more complex
-    twoRemain = []
-    status = True
-    for x in possibilities:
-        if len(possibilities[x])==2:
-            twoRemain.append(x)
-            print(possibilities[x])
-    while status:
-        for x in twoRemain:
-            print("new attempt")
-            print(x)
-            for y in possibilities[x]:
-                attempt = True
-                saveState = exists
-                pSaveState = possibilities
-                saveState[x] = y
-                pSaveState.pop(x)
-                while attempt:
-                    for x in pSaveState:
-                        letter = x[0]
-                        num = x[1]
-                        pSaveState[x] = eliminatingNumbers(letter, num)
-                    attempt = complexReCheck()
-                    print("exists")
-                    print(pSaveState)
-    print("not one solution")
+#still working on complex solutions Ive never actually played sudoku
+#however its a nice start
     print("known")
     print(exists)
     print("variables")
