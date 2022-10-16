@@ -1,4 +1,5 @@
 #Hi
+from copy import copy
 
 possibleNumbers = [1,2,3,4,5,6,7,8,9,0]
 possibleLetters = ['a','b','c','d','e','f','g','h','i']
@@ -33,6 +34,7 @@ possibilities= {'a1':[],'a2':[],'a3':[],'a4':[],'a5':[],'a6':[],'a7':[],'a8':[],
 'i1':[],'i2':[],'i3':[],'i4':[],'i5':[],'i6':[],'i7':[],'i8':[],'i9':[]}
 exists = {}
 game = True
+matching = {"a":[],"b":[],"c":[],"d":[],"e":[],"f":[],"g":[],"h":[],"i":[]}
 
 def setup():
     for x in temp:
@@ -90,18 +92,81 @@ def reCheck():
             possibilities.pop(x)
             return(True)
 
-def complexReCheck():
-    temp = []
-    for x in pSaveState:
-        if len(pSaveState[x])==1:
-            temp.append(x)
-    if len(temp)==0:
-        return(False)
-    else:
-        for x in temp:
-            saveState[x] = (pSaveState[x][0])
-            pSaveState.pop(x)
-            return(True)
+
+def addRowsto(char):
+    print(char)
+    temp = {}
+    for x in possibilities[(char + '1')]:
+        temp[(char + '1')] = x
+        for x in possibilities[(char + '2')]:
+            temp[(char + '2')] = x
+            for x in possibilities[(char + '3')]:
+                temp[(char + '3')] = x
+                for x in possibilities[(char + '4')]:
+                    temp[(char + '4')] = x
+                    for x in possibilities[(char + '5')]:
+                        temp[(char + '5')] = x
+                        for x in possibilities[(char + '6')]:
+                            temp[(char + '6')] = x
+                            for x in possibilities[(char + '7')]:
+                                temp[(char + '7')] = x
+                                for x in possibilities[(char + '8')]:
+                                    temp[(char + '8')] = x
+                                    for x in possibilities[(char + '9')]:
+                                        temp[(char + '9')] = x
+                                        checkRow = []
+                                        for x in temp:
+                                            checkRow.append(temp[x])
+                                        if len(checkRow) == len(set(checkRow)):
+                                            matching[char].append(copy(temp))
+
+def finalCheck(board):
+    #quadrant
+    for x in quadrants:
+        templist = []
+        for y in x:
+            templist.append(board[y])
+        if len(templist) != len(set(templist)):
+            return(False)
+    #column
+    for y in range(9):
+        y += 1
+        sY = str(y)
+        templist = []
+        for x in possibleLetters:
+            templist.append(board[x+sY])
+        if len(templist) != len(set(templist)):
+            return(False)
+    return(True)
+
+def combine():
+    attemptNum = 0
+    for rowA in matching['a']:
+        for rowB in matching['b']:
+            for rowC in matching['c']:
+                for rowD in matching['d']:
+                    for rowE in matching['e']:
+                        for rowF in matching['f']:
+                            for rowG in matching['g']:
+                                for rowH in matching['h']:
+                                    for rowI in matching['i']:
+                                        attemptNum = attemptNum + 1
+                                        tempExists = {}
+                                        tempExists.update(rowA)
+                                        tempExists.update(rowB)
+                                        tempExists.update(rowC)
+                                        tempExists.update(rowD)
+                                        tempExists.update(rowE)
+                                        tempExists.update(rowF)
+                                        tempExists.update(rowG)
+                                        tempExists.update(rowH)
+                                        tempExists.update(rowI)
+                                        print(attemptNum)
+                                        if finalCheck(tempExists):
+                                            return(tempExists)
+
+
+
 print("""
 ──────────────────────────────────
 ───────────────▀█▄█▀──────────────
@@ -155,7 +220,7 @@ while game:
         possibilities[x] = eliminatingNumbers(letter, num)
     game = reCheck()
 if len(possibilities)==0:
-    #print("Big Brain Play")
+    print("Big Brain Play")
     board = f"""
     {exists['a1']}|{exists['a2']}|{exists['a3']}|  |{exists['a4']}|{exists['a5']}|{exists['a6']}|  |{exists['a7']}|{exists['a8']}|{exists['a9']}\n
     {exists['b1']}|{exists['b2']}|{exists['b3']}|  |{exists['b4']}|{exists['b5']}|{exists['b6']}|  |{exists['b7']}|{exists['b8']}|{exists['b9']}\n
@@ -171,9 +236,31 @@ if len(possibilities)==0:
     print(board)
 
 else:
-#still working on complex solutions Ive never actually played sudoku
-#however its a nice start
-    print("known")
-    print(exists)
-    print("variables")
-    print(possibilities)
+#complex still doesnt work this method would be very slow anyway if it did work
+#I can do about 100000 comb per sec a tough puzzle has about 1329529324032 comb using this method
+#number could be wrong on hard puzzle comb
+    for char in exists:
+        possibilities[char] = [exists[char]]
+
+
+
+
+    for y in possibleLetters:
+        addRowsto(y)
+    print(len(matching['a']))
+    print(len(matching['b']))
+    print(len(matching['c']))
+    print(len(matching['d']))
+    print(len(matching['e']))
+    print(len(matching['f']))
+    print(len(matching['g']))
+    print(len(matching['h']))
+    print(len(matching['i']))
+
+    print(combine())
+
+
+    #print("known")
+    #print(exists)
+    #print("variables")
+    #print(possibilities)
